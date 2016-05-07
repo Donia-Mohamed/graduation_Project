@@ -8,6 +8,7 @@ package model;
 import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,12 +20,12 @@ import java.util.logging.Logger;
  */
 public class AlzheimerDB {
     
-        String url = "jdbc:mysql://localhost:3306/";
+    
+       String url = "jdbc:mysql://localhost:3306/";
 	String Driver = "com.mysql.jdbc.Driver";
 	String dbname = "alzheimer";
 	String username = "root";
 	String password = "";
-	Connection connection;
 	
 //    public AlzheimerDB(){
 //            try {
@@ -37,22 +38,65 @@ public class AlzheimerDB {
 //            }
 //    
 //    }
-    
-    
-    
-    public void selectUser(){
-        String sql = "select * from users";
-        //currentUser=ui;
-        try{
-            java.sql.Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-        while(resultSet.next()){
-            System.out.println(resultSet.getString("first_name"));
+        
+        /**
+         * @author Safaa.
+         * This method used to return connection from database 
+         * @return Connection
+         */
+        public Connection getConnection(){
+        
+            Connection connection=null;
+            try{
+               
+                DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+                connection = (Connection) DriverManager.getConnection(url + dbname, username, password);
+          
+            }catch(SQLException ex) {
+                ex.printStackTrace();
+                        
+            }
+            
+            return connection;
         }
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+    
+
+        
+        
+        
+    /**
+     * this method used to get memory and it's an example for prepared statement.
+     * @return 
+     */
+    /*
+    public String selectMemory(){
+    
+        String value="";
+        AlzheimerDB alzheimerDB=new AlzheimerDB();
+        String query="SELECT * FROM `memory`";
+        // connection 
+        Connection connection = alzheimerDB.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet= preparedStatement.executeQuery();
+            if(resultSet.next()){
+                
+                value= resultSet.getString("memory_id");
+            }
+            
+            
+            // close the connection .. 
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+            
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         
-    }
+        return value;
+    }*/
+        
     
 }

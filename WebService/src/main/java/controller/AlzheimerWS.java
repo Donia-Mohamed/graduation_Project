@@ -13,20 +13,26 @@ import model.AlzheimerDB;
 
 /**
  *
- * @author Safaa Forget
+ * @author Safaa 
  */
 
 @Path("/rest")
 public class AlzheimerWS {
-//    
-//   @GET
-//   @Produces("text/html")
-//    public String getName(){
-//        AlzheimerDB db=new AlzheimerDB();
-//        db.selectUser();
-//        return "<h1> hello </h1>";
-//    }
-    
+  
+    /**
+   * This method is example  for using web service.
+   * @return 
+   */
+    /*
+   @GET
+  @Produces("text/html")
+    public String getName(){
+        AlzheimerDB db=new AlzheimerDB();
+        
+        //return "<h1>Hello </h1>";
+        return "<h1> Value is"+db.selectMemory()+" </h1>";
+    }
+    */
     
     
 }
