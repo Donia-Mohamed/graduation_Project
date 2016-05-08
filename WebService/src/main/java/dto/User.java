@@ -5,6 +5,8 @@
  */
 package dto;
 
+import java.sql.Date;
+
 /**
  *
  * @author atef
@@ -28,7 +30,7 @@ public class User {
     int userId;
     String firstName;
     String lastName;
-    long birthday;
+    Date birthday;
     int gender; // 0 for female 1 for male
     String phoneNumber;
     String email;
@@ -38,8 +40,8 @@ public class User {
     String address;
     int type; // 0 for relative and 1 for patient
     String password;
-    long longitude;
-    long latitude;
+    String longitude;
+    String latitude;
     String imageUrl;
 
     public int getUserId() {
@@ -66,14 +68,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public long getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(long birthday) {
-        this.birthday = birthday;
-    }
-
+ 
     /**
      * this method is used to get the gender of user, return constants USER_MALE or USER_FEMALE
      * @return gender
@@ -164,19 +159,27 @@ public class User {
         this.password = password;
     }
 
-    public long getLongitude() {
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    public long getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 

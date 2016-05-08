@@ -5,6 +5,8 @@
  */
 package dto;
 
+import java.sql.Date;
+
 /**
  *
  * @author atef
@@ -45,13 +47,7 @@ public class Relative extends User {
         this.lastName = lastName;
     }
 
-    public long getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(long birthday) {
-        this.birthday = birthday;
-    }
+   
 
     public int getGender() {
         return gender;
@@ -125,21 +121,31 @@ public class Relative extends User {
         this.password = password;
     }
 
-    public long getLongitude() {
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    public long getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
+
+    
 
     public String getImageUrl() {
         return imageUrl;
