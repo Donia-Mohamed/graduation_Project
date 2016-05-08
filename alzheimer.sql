@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2016 at 03:44 PM
+-- Generation Time: May 08, 2016 at 07:45 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `alzheimer`
 --
+CREATE DATABASE IF NOT EXISTS `alzheimer` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `alzheimer`;
 
 -- --------------------------------------------------------
 
@@ -88,6 +90,13 @@ CREATE TABLE IF NOT EXISTS `memory` (
   `memory_id` int(11) NOT NULL,
   PRIMARY KEY (`memory_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `memory`
+--
+
+INSERT INTO `memory` (`memory_id`) VALUES
+(55);
 
 -- --------------------------------------------------------
 
@@ -160,17 +169,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Constraints for table `relationship`
 --
 ALTER TABLE `relationship`
-  ADD CONSTRAINT `fk6` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`) ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk1` FOREIGN KEY (`relative_id`) REFERENCES `users` (`user_id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk5` FOREIGN KEY (`family_position_id`) REFERENCES `familyposition` (`family_position_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk5` FOREIGN KEY (`family_position_id`) REFERENCES `familyposition` (`family_position_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk6` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`) ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `request`
 --
 ALTER TABLE `request`
-  ADD CONSTRAINT `fk4` FOREIGN KEY (`family_position_id`) REFERENCES `familyposition` (`family_position_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk2` FOREIGN KEY (`relative_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `fk3` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `fk3` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `fk4` FOREIGN KEY (`family_position_id`) REFERENCES `familyposition` (`family_position_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,0 +1,8 @@
+controller\AlzheimerWS.class
+model\AlzheimerDB.class
+dto\Relative.class
+dto\Relationship.class
+dto\RelativeRequest.class
+dto\User.class
+DAO\RequestDaoInterface.class
+DAO\RelationDaoInterface.class
