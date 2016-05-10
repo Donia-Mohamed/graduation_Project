@@ -5,10 +5,12 @@
  */
 package controller;
 
+import dto.User;
 import static javax.swing.text.html.FormSubmitEvent.MethodType.GET;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import model.AlzheimerDB;
 
 /**
@@ -24,14 +26,15 @@ public class AlzheimerWS {
    * @return 
    */
     
-   @GET
-  @Produces("text/html")
-    public String getName(){
-        AlzheimerDB db=new AlzheimerDB();
-        
-        return "<h1>Hello </h1>";
-       // return "<h1> Value is"+db.selectMemory()+" </h1>";
-    }
+//   @GET
+//  @Produces(MediaType.APPLICATION_JSON)
+//    public User getName(){
+//       User user=new User();
+//       user.setFirstName("donia");
+//        
+//        return user;
+//       // return "<h1> Value is"+db.selectMemory()+" </h1>";
+//    }
     
     
     

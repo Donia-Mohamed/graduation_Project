@@ -32,7 +32,7 @@ public interface RequestDaoInterface {
      * @param respond
      * @return boolean that represents if it was successful operation or not.
      */
-   public boolean respondToRequest(String patientEmail,String relativeEmail,boolean respond);
+   public int respondToRequest(String patientEmail,String relativeEmail,boolean respond);
    
    /**
     * this method used to add a patient using its email by Relative
@@ -40,7 +40,7 @@ public interface RequestDaoInterface {
     * @param patientEmail
     * @return boolean that represent state
     */
-   public boolean addRequest(String relativeEmail,String patientEmail,int familyPosition);
+   public int addRequest(String relativeEmail,String patientEmail,int familyPosition);
    
    
   

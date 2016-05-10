@@ -38,6 +38,6 @@ public interface RelationDaoInterface {
      * @param relativeEmail
      * @return 
      */
-    public boolean removePatient(String patientEmail,String relativeEmail);
+    public int removePatient(String patientEmail,String relativeEmail);
     
 }
