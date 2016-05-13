@@ -6,6 +6,7 @@
 package controller;
 
 import DAO.RelationDaoImpl;
+import DAO.Status;
 import dto.Relative;
 import dto.User;
 import java.util.ArrayList;
@@ -62,10 +63,31 @@ public class RelationWS {
     @GET
     @Path("/removePatient/{patientEmail}/{relativeEmail}")
     @Produces(MediaType.APPLICATION_JSON)
-    public int removePatient(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail){
+    public Status removePatient(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail){
        RelationDaoImpl relDaqImpl=new RelationDaoImpl();
        int result=relDaqImpl.removePatient(patientEmail, relativeEmail);
-    return result;
+        boolean flag;
+    if(result==1){
+        flag=true;
+    }else{
+        flag=false;
+    }
+      Status status = new Status();
+        
+                    if (flag) {
+
+                        status.setStatus(1);
+                       status.setMessage("Successfully ");
+
+                    } else {
+
+                        status.setStatus(0);
+                       status.setMessage("failed");
+
+                    }
+      return status;
+
+   // return result;
     }
     
 }

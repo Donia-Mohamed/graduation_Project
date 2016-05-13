@@ -6,6 +6,7 @@
 package controller;
 
 import DAO.RequestDaoImpl;
+import DAO.Status;
 import dto.Relationship;
 import dto.Relative;
 import java.util.ArrayList;
@@ -47,10 +48,31 @@ public class RequestWS {
     @GET
     @Path("/respondToRequest/{patientEmail}/{relativeEmail}/{respond}")
     @Produces(MediaType.APPLICATION_JSON)
-    public int respondToRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "respond")boolean respond){
+    public Status respondToRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "respond")boolean respond){
     RequestDaoImpl reqDaoImpl=new RequestDaoImpl();
     int result=reqDaoImpl.respondToRequest(patientEmail, relativeEmail, respond);
-    return result;
+     boolean flag;
+    if(result==1){
+        flag=true;
+    }else{
+        flag=false;
+    }
+      Status status = new Status();
+        
+                    if (flag) {
+
+                        status.setStatus(1);
+                       status.setMessage("Successfully ");
+
+                    } else {
+
+                        status.setStatus(0);
+                       status.setMessage("failed");
+
+                    }
+                   return status;
+
+    //return result;
     }
     
     /**
@@ -64,11 +86,33 @@ public class RequestWS {
     @GET
     @Path("/addRequest/{patientEmail}/{relativeEmail}/{familyPosition}")
     @Produces(MediaType.APPLICATION_JSON)
-    public int addRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "familyPosition")int familyPosition){
+    public Status addRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "familyPosition")int familyPosition){
     RequestDaoImpl ReqDaoImpl=new RequestDaoImpl();
     int result=ReqDaoImpl.addRequest(relativeEmail, patientEmail,familyPosition);
-    System.out.println("result="+result);
-    return result;
+    boolean flag;
+    if(result==1){
+        flag=true;
+    }else{
+        flag=false;
+    }
+      Status status = new Status();
+        
+                    if (flag) {
+
+                        status.setStatus(1);
+                       status.setMessage("Successfully ");
+
+                    } else {
+
+                        status.setStatus(0);
+                       status.setMessage("failed");
+
+                    }
+                   return status;
+
+    
+//    System.out.println("result="+result);
+//    return result;
     }
     
     
