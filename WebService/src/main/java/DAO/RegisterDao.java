@@ -47,9 +47,9 @@ public class RegisterDao {
                 preparedStatement.setString(10, user.getAddress());
                 preparedStatement.setInt(11, user.getType());
                 preparedStatement.setString(12, passEncrypt);
-                preparedStatement.setString(13, user.getLongitude());
+                preparedStatement.setDouble(13, user.getLongitude());
                 preparedStatement.setString(14, user.getImageUrl());
-                preparedStatement.setString(15, user.getLatitude());
+                preparedStatement.setDouble(15, user.getLatitude());
                
                 
                     

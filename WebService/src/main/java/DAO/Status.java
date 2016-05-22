@@ -5,6 +5,8 @@
  */
 package DAO;
 
+import dto.User;
+
 /**
  *
  * @author Safaa Forget
@@ -12,8 +14,21 @@ package DAO;
 public class Status {
    
     int status;
-    String message;
 
+   
+    String message;
+    
+    User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
     public int getStatus() {
         return status;
     }

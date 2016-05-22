@@ -11,6 +11,8 @@ import dto.Relative;
 import dto.User;
 import java.util.ArrayList;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -44,10 +46,10 @@ public class RelationWS {
      * @param relativeEmail
      * @return ArrayList of User
      */
-    @GET
-    @Path("/getPatients/{relativeEmail}")
+    @POST
+    @Path("/getPatients")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<User> getPatients(@PathParam(value = "relativeEmail") String relativeEmail) {
+    public ArrayList<User> getPatients(@HeaderParam("relativeEmail") String relativeEmail) {
 
         RelationDaoImpl relDaqImpl=new RelationDaoImpl();
          ArrayList<User> patients=relDaqImpl.getPatients(relativeEmail);
@@ -58,7 +60,7 @@ public class RelationWS {
      * This method used to make relative remove patient from his patient list
      * @param patientEmail
      * @param relativeEmail
-     * @return int 
+     * @return Status
      */
     @GET
     @Path("/removePatient/{patientEmail}/{relativeEmail}")

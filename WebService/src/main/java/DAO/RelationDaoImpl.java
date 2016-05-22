@@ -59,14 +59,15 @@ public class RelationDaoImpl implements RelationDaoInterface {
                 relative.setAddress(rs.getString("address"));
                 relative.setType(rs.getInt("type"));
                 relative.setPassword(rs.getString("password"));
-                relative.setLongitude(rs.getString("longitude"));
+                relative.setLongitude(rs.getDouble("longitude"));
                 relative.setImageUrl(rs.getString("image_url"));
-                relative.setLatitude(rs.getString("latitude"));
+                relative.setLatitude(rs.getDouble("latitude"));
                 relativesList.add(relative);
                 System.err.println("done");
             }
             RequestDaoImpl reqDaoImpl=new RequestDaoImpl();
-            relatives=reqDaoImpl.addPositionFamilyToGetRequest(relativesList);
+            int patientId=reqDaoImpl.getPatientId(patientEmail);
+            relatives=reqDaoImpl.addPositionFamilyToGetRequest(relativesList,patientId);
             rs.close();
             preparedStatement.close();
             connection.close();
@@ -116,9 +117,9 @@ public class RelationDaoImpl implements RelationDaoInterface {
                 user.setAddress(rs.getString("address"));
                 user.setType(rs.getInt("type"));
                 user.setPassword(rs.getString("password"));
-                user.setLongitude(rs.getString("longitude"));
+                user.setLongitude(rs.getDouble("longitude"));
                 user.setImageUrl(rs.getString("image_url"));
-                user.setLatitude(rs.getString("latitude"));
+                user.setLatitude(rs.getDouble("latitude"));
 
                 patientsList.add(user);
 

@@ -29,9 +29,13 @@ public class RequestDaoImpl implements RequestDaoInterface {
 
         //Query to select relative from users table
         String selectRelativeQuery = "select * From alzheimer.users where user_id in(select relative_id from alzheimer.request where  patient_id in(select user_id from alzheimer.users where email= ?)); ";
+        
         AlzheimerDB alzheimerDB = new AlzheimerDB();
+        
         ArrayList<Relative> relativesReq = new ArrayList<>();
-        ArrayList<Relative> relativeRequests=new ArrayList<>();
+        
+        ArrayList<Relative> relativeRequests = new ArrayList<>();
+        
         Connection connection = alzheimerDB.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectRelativeQuery);
@@ -40,8 +44,11 @@ public class RequestDaoImpl implements RequestDaoInterface {
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
+                
                 System.out.println("enter while get request");
+                
                 Relative relative = new Relative();
+                
                 relative.setUserId(rs.getInt("user_id"));
                 relative.setFirstName(rs.getString("first_name"));
                 relative.setLastName(rs.getString("last_name"));
@@ -54,18 +61,24 @@ public class RequestDaoImpl implements RequestDaoInterface {
                 relative.setCity(rs.getString("city"));
                 relative.setAddress(rs.getString("address"));
                 relative.setType(rs.getInt("type"));
-                relative.setLongitude(rs.getString("longitude"));
+                relative.setLongitude(rs.getDouble("longitude"));
                 relative.setImageUrl(rs.getString("image_url"));
-                relative.setLatitude(rs.getString("latitude"));
- 
+                relative.setLatitude(rs.getDouble("latitude"));
+
                 relativesReq.add(relative);
-          
+
             }
-           
-            relativeRequests=addPositionFamilyToGetRequest(relativesReq);
+            // close connection 
             rs.close();
             preparedStatement.close();
             connection.close();
+            
+            int patientId=getPatientId(patientEmail);
+            
+            System.out.println("id="+patientId);
+            
+            relativeRequests = addPositionFamilyToGetRequest(relativesReq,patientId);
+           
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -73,6 +86,7 @@ public class RequestDaoImpl implements RequestDaoInterface {
         return relativeRequests;
 
     }
+
 
     /**
      * this method used to respond to request with o if he decline or 1 if he accept
@@ -88,15 +102,21 @@ public class RequestDaoImpl implements RequestDaoInterface {
         int patientId = 0;
         int familyPositionId = 0;
         int resultOfRespond = 0;
-
+        
+        PreparedStatement preparedStatement;
+        
+        AlzheimerDB alzheimerDB = new AlzheimerDB();
+        
+        Connection connection = alzheimerDB.getConnection();
+        
         //when patient accept request
         if (respond == true) {
+           
             //Query to select relative id from users table
             String selectIdRelativeQuery = "select user_id from alzheimer.users where email= ?";
-            AlzheimerDB alzheimerDB = new AlzheimerDB();
-            Connection connection = alzheimerDB.getConnection();
+
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement(selectIdRelativeQuery);
+                preparedStatement = connection.prepareStatement(selectIdRelativeQuery);
                 preparedStatement.setString(1, relativeEmail);
 
                 ResultSet rs = preparedStatement.executeQuery();
@@ -104,19 +124,26 @@ public class RequestDaoImpl implements RequestDaoInterface {
                 while (rs.next()) {
                     relativeId = rs.getInt("user_id");
                 }
-                //Query to select relative from request table
-                String selectQuery = "select * From alzheimer.request where relative_id= ? ";
+                preparedStatement.close();
+                rs.close();
+                
+                // Query to get patient _ id
+                  patientId = getPatientId(patientEmail);
+                 
+             System.out.println("patient id="+patientId);
+                String selectQuery = "select * From alzheimer.request where relative_id= ? and patient_id= ?";
                 preparedStatement = connection.prepareStatement(selectQuery);
                 preparedStatement.setInt(1, relativeId);
+                preparedStatement.setInt(2, patientId);
 
                 rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
 
-                    patientId = rs.getInt("patient_id");
+                    //patientId = rs.getInt("patient_id");
                     familyPositionId = rs.getInt("family_position_id");
                 }
-                System.out.println(patientId + " " + familyPositionId + " " + relativeId);
+
                 //Query to insert relative to relationship table
                 String insertQuery = "insert into alzheimer.relationship (relative_id,patient_id,family_position_id) values(?,?,?)";
                 preparedStatement = connection.prepareStatement(insertQuery);
@@ -125,11 +152,12 @@ public class RequestDaoImpl implements RequestDaoInterface {
                 preparedStatement.setInt(3, familyPositionId);
 
                 resultOfRespond = preparedStatement.executeUpdate();
-              
+
                 //Query to delete relative from request table
-                String deleteQuery = "delete from alzheimer.request where relative_id= ?";
+                String deleteQuery = "delete from alzheimer.request where relative_id= ? and patient_id= ?";
                 preparedStatement = connection.prepareStatement(deleteQuery);
                 preparedStatement.setInt(1, relativeId);
+                preparedStatement.setInt(2, patientId);
                 preparedStatement.executeUpdate();
 
                 rs.close();
@@ -139,27 +167,55 @@ public class RequestDaoImpl implements RequestDaoInterface {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            //when patient decline request
-            if (respond == false) {
-                String deleteFromRequestQuery = "delete from alzheimer.request where relative_id= ?";
-                try {
-                    PreparedStatement preparedStatement = connection.prepareStatement(deleteFromRequestQuery);
-                    preparedStatement.setInt(1, relativeId);
-                    preparedStatement.executeUpdate();
+        }//end if
+        ///////////////////////////// 
+        //when patient decline request
+        if (respond == false) {
+            String selectRelativeIdQuery = "select user_id from alzheimer.users where email= ?";
 
-                    preparedStatement.close();
-                    connection.close();
-                    
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+            try {
+                preparedStatement = connection.prepareStatement(selectRelativeIdQuery);
+                preparedStatement.setString(1, relativeEmail);
+                System.out.print("email" + relativeEmail);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    relativeId = rs.getInt("user_id");
+
                 }
 
-            }//end if
+                // Query to select patient_id
+                String selectIdPatientQuery = "select user_id from alzheimer.users where email= ?";
 
-        }
+                preparedStatement = connection.prepareStatement(selectIdPatientQuery);
+                preparedStatement.setString(1, patientEmail);
+
+                rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    patientId = rs.getInt("user_id");
+                }
+                //Query to delete from request table      
+                String deleteFromRequestQuery = "delete from alzheimer.request where relative_id= ? and patient_id= ?";
+
+                preparedStatement = connection.prepareStatement(deleteFromRequestQuery);
+                preparedStatement.setInt(1, relativeId);
+                preparedStatement.setInt(2, patientId);
+                resultOfRespond = preparedStatement.executeUpdate();
+
+                preparedStatement.close();
+                connection.close();
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+        }//end if
+
         return resultOfRespond;
 
     }
+
 
     /**
      * this method used to add a patient using its email by Relative
@@ -223,33 +279,35 @@ public class RequestDaoImpl implements RequestDaoInterface {
      * @param relativeId
      * @return int
      */
-    public int getPositionFamily(int relativeId){
-    
-    int familyPositionId=0;
-       
+     public int getPositionFamily(int relativeId,int patientId) {
+
+        int familyPositionId = 0;
+
         AlzheimerDB alzheimerDB = new AlzheimerDB();
         Connection connection = alzheimerDB.getConnection();
         try {
-          
-        //Query to select family position id from request table
-            String selectFamilyPosition="select family_position_id from alzheimer.request where relative_id= ?";  
+
+            //Query to select family position id from request table
+            String selectFamilyPosition = "select family_position_id from alzheimer.request where relative_id= ? and patient_id= ?";
             PreparedStatement preparedStatement = connection.prepareStatement(selectFamilyPosition);
-            preparedStatement.setInt(1, relativeId);
-            ResultSet rs=preparedStatement.executeQuery();
-            
-             while (rs.next()) {
+            preparedStatement.setInt(1,relativeId);
+            preparedStatement.setInt(2,patientId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
                 familyPositionId = rs.getInt("family_position_id");
             }
-             
-            String selectFamilyPos="select family_position_id from alzheimer.relationship where relative_id= ?";  
+
+            String selectFamilyPos = "select family_position_id from alzheimer.relationship where relative_id= ? and patient_id= ?";
             preparedStatement = connection.prepareStatement(selectFamilyPos);
             preparedStatement.setInt(1, relativeId);
-            rs=preparedStatement.executeQuery();
-            
-             while (rs.next()) {
+            preparedStatement.setInt(2, patientId);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
                 familyPositionId = rs.getInt("family_position_id");
-            }  
-            
+            }
+
             rs.close();
             preparedStatement.close();
             connection.close();
@@ -257,29 +315,63 @@ public class RequestDaoImpl implements RequestDaoInterface {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
-    return familyPositionId;
+
+        return familyPositionId;
     }
+
     /**
      * This method used to add position family id to array list of relative.
      * @param arrayListOfRelative
      * @return ArrayList of Relative
      */
-    public ArrayList<Relative>addPositionFamilyToGetRequest(ArrayList<Relative> arrayListOfRelative){
-     
-       for(int i=0;i<arrayListOfRelative.size();i++)
-       {
-           Relative relative=arrayListOfRelative.get(0);
-           System.out.println("firstName "+relative.getFirstName());
-           int relativeId=relative.getUserId();
-           int positionFamily=getPositionFamily(relativeId);
-           relative.setRelationshipPosition(positionFamily);
-           System.out.println("family posId"+relative.getRelationshipPosition());
-           //arrayListOfRelative.add(relative);
-       }
+  public ArrayList<Relative> addPositionFamilyToGetRequest(ArrayList<Relative> arrayListOfRelative,int patientId) {
+
+        for (int i = 0; i < arrayListOfRelative.size(); i++) {
+            
+            Relative relative = arrayListOfRelative.get(i);
+            //  System.out.println("firstName " + relative.getFirstName());
+            int relativeId = relative.getUserId();
+            int positionFamily = getPositionFamily(relativeId,patientId);
+            relative.setRelationshipPosition(positionFamily);
+            //   System.out.println("family posId" + relative.getRelationshipPosition());
+            //arrayListOfRelative.add(relative);
+        }
+
+        return arrayListOfRelative;
+    }
+     /**
+     * This method used to get patient id
+     * @param patientEmail
+     * @return int 
+     */
+    public int getPatientId(String patientEmail) {
         
-       
-    return arrayListOfRelative;
+        int patientId = 0;
+        
+        AlzheimerDB alzheimerDB = new AlzheimerDB();
+        Connection connection = alzheimerDB.getConnection();
+        // Query to select patient_id
+        String selectIdPatientQuery = "select user_id from alzheimer.users where email= ?";
+
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(selectIdPatientQuery);
+
+            preparedStatement.setString(1, patientEmail);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                patientId = rs.getInt("user_id");
+            }
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("patient id enter getfunction=" + patientId);
+        return patientId;
     }
 
 }

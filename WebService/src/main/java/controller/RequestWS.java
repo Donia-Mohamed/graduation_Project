@@ -11,6 +11,8 @@ import dto.Relationship;
 import dto.Relative;
 import java.util.ArrayList;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,10 +29,10 @@ public class RequestWS {
      * @param patientEmail
      * @return ArrayList of relative
      */
-    @GET
-    @Path("/{patientemail}")
+    @POST
+    @Path("/getRequests")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Relative> getRequests(@PathParam(value = "patientemail") String patientEmail) {
+    public ArrayList<Relative> getRequests(@HeaderParam("patientemail") String patientEmail) {
 
         RequestDaoImpl reqDaoImpl = new RequestDaoImpl();
         ArrayList<Relative> relatives = reqDaoImpl.getRequests(patientEmail);
@@ -43,12 +45,12 @@ public class RequestWS {
      * @param patientEmail
      * @param relativeEmail
      * @param respond
-     * @return int
+     * @return Status
      */
-    @GET
-    @Path("/respondToRequest/{patientEmail}/{relativeEmail}/{respond}")
+    @POST
+    @Path("/respondToRequest")
     @Produces(MediaType.APPLICATION_JSON)
-    public Status respondToRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "respond")boolean respond){
+    public Status respondToRequest(@HeaderParam("patientEmail") String patientEmail,@HeaderParam("relativeEmail") String relativeEmail,@HeaderParam("status")boolean respond){
     RequestDaoImpl reqDaoImpl=new RequestDaoImpl();
     int result=reqDaoImpl.respondToRequest(patientEmail, relativeEmail, respond);
      boolean flag;
@@ -80,13 +82,13 @@ public class RequestWS {
      * @param patientEmail
      * @param relativeEmail
      * @param familyPosition
-     * @return int
+     * @return Status
      */
     
-    @GET
-    @Path("/addRequest/{patientEmail}/{relativeEmail}/{familyPosition}")
+    @POST
+    @Path("/addRequest")
     @Produces(MediaType.APPLICATION_JSON)
-    public Status addRequest(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail,@PathParam(value = "familyPosition")int familyPosition){
+    public Status addRequest(@HeaderParam("patientEmail") String patientEmail,@HeaderParam("relativeEmail") String relativeEmail,@HeaderParam("familyPosition")int familyPosition){
     RequestDaoImpl ReqDaoImpl=new RequestDaoImpl();
     int result=ReqDaoImpl.addRequest(relativeEmail, patientEmail,familyPosition);
     boolean flag;

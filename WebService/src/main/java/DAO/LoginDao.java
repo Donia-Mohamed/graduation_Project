@@ -20,8 +20,9 @@ import model.DesEncrypter;
  */
 public class LoginDao {
     
-     public User checkLogin(String email, String password){
+     public Status checkLogin(String email, String password){
          User user=new User();
+         Status status=new Status();
          AlzheimerDB alzheimerDB=new AlzheimerDB();
          Connection connection=alzheimerDB.getConnection();
          DesEncrypter encrypt=new DesEncrypter();
@@ -33,9 +34,10 @@ public class LoginDao {
             String dbPassword = resultSet.getString("password");
            
             String passEncrypt=encrypt.encrypt(password);
-            String dbPassEncrypt=encrypt.encrypt(dbPassword);
+           // String dbPassEncrypt=encrypt.encrypt(dbPassword);
             
-            if (dbPassEncrypt.equals(passEncrypt)){
+            if (dbPassword.equals(passEncrypt)){
+                System.out.println("true password");
                 
                 user.setFirstName(resultSet.getString("first_name"));
                user.setLastName(resultSet.getString("last_name"));
@@ -49,9 +51,18 @@ public class LoginDao {
                user.setAddress(resultSet.getString("address"));
                user.setType(resultSet.getInt("type"));
                 user.setPassword(password);
-                user.setLongitude(resultSet.getString("longitude"));
+                user.setLongitude(resultSet.getDouble("longitude"));
                 user.setImageUrl("D:\\iti\\GP\\graduation_Project\\images\\"+resultSet.getString("image_url"));
-                user.setLatitude(resultSet.getString("latitude"));
+                user.setLatitude(resultSet.getDouble("latitude"));
+                status.setStatus(1);
+                status.setMessage("success");
+               status.setUser(user);
+                
+            }else{
+                System.out.println("fail pass");
+                status.setStatus(0);
+                status.setMessage("fail");
+                
             }
         }
          // close the connection .. 
@@ -61,7 +72,7 @@ public class LoginDao {
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
-        return user;
+        return status;
         
     }
     
