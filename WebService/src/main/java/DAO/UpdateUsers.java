@@ -109,6 +109,49 @@ public class UpdateUsers {
         }//end of catch
         return flag;
     }//end of method updateLastName
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     public boolean updateFullName(String email, String lastName,String firstName) {
+
+        boolean flag = false;
+
+        String updateLastNamesql = "update users SET first_name = ?, last_name = ?  where email = ?";
+
+        try {
+
+            AlzheimerDB alzheimerDB = new AlzheimerDB();
+
+            Connection connection = alzheimerDB.getConnection();
+
+            PreparedStatement ps = connection.prepareStatement(updateLastNamesql);
+
+            ps.setString(1, firstName);
+            
+            ps.setString(2, lastName);
+
+            ps.setString(2, email);
+
+            int rs = ps.executeUpdate();
+
+            flag = true;
+
+            ps.close();
+
+            connection.close();
+
+        }//end of try
+        catch (SQLException ex) {
+
+            ex.printStackTrace();
+
+            flag = false;
+        }//end of catch
+        return flag;
+    }//end of method updatefullName
+    
+    
+    
+    
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**

@@ -21,10 +21,11 @@ import model.DesEncrypter;
  */
 public class UserDao {
     
-    public User getAllPatient(String email){
+    public Status getAllPatient(String email){
        AlzheimerDB alzheimerDB=new AlzheimerDB();
          Connection connection=alzheimerDB.getConnection();
           User user=new User();
+          Status status=new Status();
         String sql = "SELECT * FROM alzheimer.users where type=1 and email ='"+email+"'";
         
         try{
@@ -35,17 +36,23 @@ public class UserDao {
                user.setFirstName(resultSet.getString("first_name"));
                user.setLastName(resultSet.getString("last_name"));
                user.setEmail(resultSet.getString("email"));
-               user.setImageUrl("D:\\iti\\GP\\graduation_Project\\images\\"+resultSet.getString("image_url"));
+               user.setImageUrl(resultSet.getString("image_url"));
+               status.setStatus(1);
+               status.setMessage("successful");
+               status.setUser(user);
                 
               
 
+            }else{
+                status.setStatus(0);
+                status.setMessage("failed");
             }
              // close the connection .. 
             resultSet.close();
             statement.close();
             connection.close();
         }catch(Exception ex){ex.printStackTrace(); }
-        return user;
+        return status;
     }
         
         

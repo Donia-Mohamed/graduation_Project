@@ -6,6 +6,7 @@
 package controller;
 
 import DAO.LoginDao;
+import DAO.Status;
 import DAO.UserDao;
 import dto.User;
 import java.util.ArrayList;
@@ -28,10 +29,12 @@ public class PatientsWS {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public User AllPatitents(@HeaderParam("email")String email){
+    public Status AllPatitents(@HeaderParam("email")String email){
         UserDao userdb=new UserDao();
-        User patient=userdb.getAllPatient(email);
-        return patient;
+        Status status=userdb.getAllPatient(email);
+        System.out.println("status >>"+status.getMessage());
+  //      System.out.println("status >>"+status.getUser().getFirstName());
+        return status;
     }
     
 }

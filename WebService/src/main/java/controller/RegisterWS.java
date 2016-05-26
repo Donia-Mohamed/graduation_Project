@@ -69,14 +69,16 @@ public class RegisterWS {
 		@FormDataParam("file") InputStream uploadedInputStream,
 		@FormDataParam("file") FormDataContentDisposition fileDetail,
                 @FormDataParam("email") String email) {
+            
                 RegisterDao registerDB=new RegisterDao();
-		String uploadedFileLocation = "D:\\iti\\GP\\graduation_Project\\images\\"+fileDetail.getFileName();
+		String uploadedFileLocation = "E:\\"+email+".jpg";
+                //String uploadedFileLocation = "E:\\"+email;
                 
                 
 		// save it
 		writeToFile(uploadedInputStream, uploadedFileLocation);
                 
-                boolean flag= registerDB.registerUserImage(email, fileDetail.getFileName());
+                boolean flag= registerDB.registerUserImage(email,email+".jpg");
 		
                 String output = "File uploaded to : " + uploadedFileLocation;
 

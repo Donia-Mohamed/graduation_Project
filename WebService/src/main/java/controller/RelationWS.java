@@ -31,10 +31,10 @@ public class RelationWS {
      * @return ArrayList of Relative
      */
     
-    @GET
-    @Path("/getRelatives/{patientEmail}")
+    @POST
+    @Path("/getRelatives")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Relative> getRelatives(@PathParam(value = "patientEmail") String patientEmail) {
+    public ArrayList<Relative> getRelatives(@HeaderParam(value = "patientEmail") String patientEmail) {
 
         RelationDaoImpl relDaqImpl=new RelationDaoImpl();
          ArrayList<Relative> relatives=relDaqImpl.getRelatives(patientEmail);
@@ -62,10 +62,10 @@ public class RelationWS {
      * @param relativeEmail
      * @return Status
      */
-    @GET
-    @Path("/removePatient/{patientEmail}/{relativeEmail}")
+    @POST
+    @Path("/removePatient")
     @Produces(MediaType.APPLICATION_JSON)
-    public Status removePatient(@PathParam(value = "patientEmail") String patientEmail,@PathParam(value = "relativeEmail") String relativeEmail){
+    public Status removePatient(@HeaderParam(value = "patientEmail") String patientEmail,@HeaderParam(value = "relativeEmail") String relativeEmail){
        RelationDaoImpl relDaqImpl=new RelationDaoImpl();
        int result=relDaqImpl.removePatient(patientEmail, relativeEmail);
         boolean flag;

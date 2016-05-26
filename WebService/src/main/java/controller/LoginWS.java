@@ -47,8 +47,7 @@ public class LoginWS {
         LoginDao loginDB=new LoginDao();
         System.out.println ("email: "+email+"  password  "+password);
         Status status=loginDB.checkLogin(email, password);
-        System.out.println("status >>"+status.getMessage());
-        System.out.println("status >>"+status.getUser().getFirstName());
+        
         return status;
     }
      
