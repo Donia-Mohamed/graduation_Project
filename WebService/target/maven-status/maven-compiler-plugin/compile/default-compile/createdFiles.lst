@@ -6,6 +6,7 @@ model\AlzheimerDB.class
 dto\RelativeRequest.class
 dto\User.class
 DAO\RequestDaoInterface.class
+constants\Constants.class
 DAO\LoginDao.class
 controller\RegisterWS.class
 controller\PatientsWS.class
@@ -15,7 +16,6 @@ DAO\Status.class
 controller\RequestWS.class
 dto\Relative.class
 dto\Relationship.class
-controller\images.class
 model\DesEncrypter.class
 dto\RequestBodyLogin.class
 DAO\UserDao.class

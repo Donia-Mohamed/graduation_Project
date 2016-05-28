@@ -111,7 +111,7 @@ public class UpdateUsers {
     }//end of method updateLastName
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     public boolean updateFullName(String email, String lastName,String firstName) {
+     public boolean updateFullName(String email, String firstName,String lastName) {
 
         boolean flag = false;
 
@@ -129,7 +129,7 @@ public class UpdateUsers {
             
             ps.setString(2, lastName);
 
-            ps.setString(2, email);
+            ps.setString(3, email);
 
             int rs = ps.executeUpdate();
 

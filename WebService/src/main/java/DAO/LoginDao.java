@@ -5,9 +5,11 @@
  */
 package DAO;
 
+import constants.Constants;
 import dto.User;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import javax.servlet.ServletContext;
 import model.AlzheimerDB;
 import model.DesEncrypter;
 
@@ -52,8 +54,8 @@ public class LoginDao {
                user.setType(resultSet.getInt("type"));
                 user.setPassword(password);
                 user.setLongitude(resultSet.getDouble("longitude"));
-                //user.setImageUrl("E:\\"+resultSet.getString("image_url"));
-                user.setImageUrl("https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/12799217_10154046370367048_178721519128399457_n.jpg?oh=f7fbe41d6029701d5f8c347e4ff8f172&oe=57E2F1EF");
+                user.setImageUrl(Constants.IMAGE_PATH+resultSet.getString("image_url"));
+
                 user.setLatitude(resultSet.getDouble("latitude"));
                 status.setStatus(1);
                 status.setMessage("success");

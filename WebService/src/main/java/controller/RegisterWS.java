@@ -18,11 +18,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,8 +34,19 @@ import javax.ws.rs.core.Response;
  *  this class web service register call method register from database 
  * return json -> success or failed 
  */
+
 @Path("/regist")
 public class RegisterWS {
+
+    ServletContext context;
+    
+    public RegisterWS(@Context ServletContext context) {
+        
+        this.context=context;
+    }
+    
+    
+    
     
     @POST
     @Path("/register")
@@ -71,10 +84,14 @@ public class RegisterWS {
                 @FormDataParam("email") String email) {
             
                 RegisterDao registerDB=new RegisterDao();
-		String uploadedFileLocation = "E:\\"+email+".jpg";
-                //String uploadedFileLocation = "E:\\"+email;
-                
-                
+
+               
+              
+                // get the path from the context .. 
+                String path = context.getRealPath("/images");
+
+                String uploadedFileLocation = path+"\\"+email+".jpg";
+
 		// save it
 		writeToFile(uploadedInputStream, uploadedFileLocation);
                 
@@ -82,6 +99,8 @@ public class RegisterWS {
 		
                 String output = "File uploaded to : " + uploadedFileLocation;
 
+                System.out.println(output);
+                
                 Status status = new Status();
         
                     if (flag) {

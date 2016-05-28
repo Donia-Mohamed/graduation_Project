@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import constants.Constants;
 import dto.Relative;
 import dto.User;
 import java.sql.Connection;
@@ -60,7 +61,7 @@ public class RelationDaoImpl implements RelationDaoInterface {
                 relative.setType(rs.getInt("type"));
                 relative.setPassword(rs.getString("password"));
                 relative.setLongitude(rs.getDouble("longitude"));
-                relative.setImageUrl(rs.getString("image_url"));
+                relative.setImageUrl(Constants.IMAGE_PATH+rs.getString("image_url"));
                 relative.setLatitude(rs.getDouble("latitude"));
                 relativesList.add(relative);
                 System.err.println("done");
@@ -118,7 +119,7 @@ public class RelationDaoImpl implements RelationDaoInterface {
                 user.setType(rs.getInt("type"));
                 user.setPassword(rs.getString("password"));
                 user.setLongitude(rs.getDouble("longitude"));
-                user.setImageUrl(rs.getString("image_url"));
+                user.setImageUrl(Constants.IMAGE_PATH+rs.getString("image_url"));
                 user.setLatitude(rs.getDouble("latitude"));
 
                 patientsList.add(user);

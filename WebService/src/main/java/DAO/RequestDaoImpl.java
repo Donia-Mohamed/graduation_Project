@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import constants.Constants;
 import dto.Relative;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,7 +63,7 @@ public class RequestDaoImpl implements RequestDaoInterface {
                 relative.setAddress(rs.getString("address"));
                 relative.setType(rs.getInt("type"));
                 relative.setLongitude(rs.getDouble("longitude"));
-                relative.setImageUrl(rs.getString("image_url"));
+                relative.setImageUrl(Constants.IMAGE_PATH+rs.getString("image_url"));
                 relative.setLatitude(rs.getDouble("latitude"));
 
                 relativesReq.add(relative);

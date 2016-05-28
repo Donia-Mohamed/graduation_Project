@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import constants.Constants;
 import dto.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +37,8 @@ public class UserDao {
                user.setFirstName(resultSet.getString("first_name"));
                user.setLastName(resultSet.getString("last_name"));
                user.setEmail(resultSet.getString("email"));
-               user.setImageUrl(resultSet.getString("image_url"));
+               user.setImageUrl(
+                       Constants.IMAGE_PATH+resultSet.getString("image_url"));
                status.setStatus(1);
                status.setMessage("successful");
                status.setUser(user);
