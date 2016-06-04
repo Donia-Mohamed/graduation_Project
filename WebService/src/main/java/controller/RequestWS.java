@@ -86,7 +86,7 @@ public class RequestWS {
      */
     
     @POST
-    @Path("/addRequest")
+    @Path("/addRequest")  
     @Produces(MediaType.APPLICATION_JSON)
     public Status addRequest(@HeaderParam("patientEmail") String patientEmail,@HeaderParam("relativeEmail") String relativeEmail,@HeaderParam("familyPosition")int familyPosition){
     RequestDaoImpl ReqDaoImpl=new RequestDaoImpl();

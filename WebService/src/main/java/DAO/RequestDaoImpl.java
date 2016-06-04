@@ -229,7 +229,7 @@ public class RequestDaoImpl implements RequestDaoInterface {
         int relativeId = 0;
         int patientId = 0;
         int result = 0;
-
+        boolean resultOfCheck;
         //Query to select relative id from users table
         String selectIdRelativeQuery = "select user_id from alzheimer.users where email= ?";
         AlzheimerDB alzheimerDB = new AlzheimerDB();
@@ -256,7 +256,11 @@ public class RequestDaoImpl implements RequestDaoInterface {
             while (rs.next()) {
                 patientId = rs.getInt("user_id");
             }
-        
+            //to check request is exist or not
+            resultOfCheck =checkAddRequest(patientEmail, relativeId);
+            System.out.println("check----> "+resultOfCheck);
+            
+         if(resultOfCheck==false){
             //Query to add request into request table
             String addRequestQuery = "insert into alzheimer.request (relative_id,patient_id,family_position_id) values(?,?,?)";
             preparedStatement = connection.prepareStatement(addRequestQuery);
@@ -265,7 +269,13 @@ public class RequestDaoImpl implements RequestDaoInterface {
             preparedStatement.setInt(3, familyPosition);
 
             result = preparedStatement.executeUpdate();
-
+             System.out.println("enter resultOfCheck==false");
+         }
+         if(resultOfCheck==true){
+              System.out.println("enter resultOfCheck==true");
+           return 0;
+           
+         }
             rs.close();
             preparedStatement.close();
             connection.close();
@@ -374,5 +384,71 @@ public class RequestDaoImpl implements RequestDaoInterface {
         System.out.println("patient id enter getfunction=" + patientId);
         return patientId;
     }
+/**
+ * This method is used to check request when relative add request 
+ * if is founded in relationship already or not 
+ * @param patientId
+ * @param relativeId
+ * @return boolean
+ */
+    public boolean checkAddRequest(String patientEmail,int relativeId){
+         int patientID = 0;
+         int relativeID=0;
+    
+                 
+         AlzheimerDB alzheimerDB = new AlzheimerDB();
+         Connection connection = alzheimerDB.getConnection();
+           //to get patient id
+             patientID=getPatientId(patientEmail);
+           //Query to select relative id from request
+            String selectQuery = "select relative_id from alzheimer.request where patient_id= ? ";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            preparedStatement.setInt(1, patientID);
+            ResultSet rs = preparedStatement.executeQuery();
 
+            while (rs.next()) {
+                relativeID=rs.getInt("relative_id");
+             System.out.println("check inside function relativeID-->"+relativeID+"relativeId "
+           +relativeId+"patientID "+patientID);    
+           
+             
+             
+             if(relativeID==relativeId){
+            
+              return true;
+            }
+            }
+             //Query to select relative id from relationship
+            String selectQueryFromRelationship = "select relative_id from alzheimer.relationship where patient_id= ? ";
+        
+       
+             preparedStatement = connection.prepareStatement(selectQueryFromRelationship);
+             preparedStatement.setInt(1, patientID);
+             rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                relativeID=rs.getInt("relative_id");
+             System.out.println("check inside function relativeID-->"+relativeID+"relativeId "
+           +relativeId+"patientID "+patientID);    
+           
+             
+             
+             if(relativeID==relativeId){
+            
+              return true;
+            }
+            }
+            
+            // close connection 
+            rs.close();
+            preparedStatement.close();
+            connection.close(); 
+            }catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+    return false;
+     
+    }
 }
