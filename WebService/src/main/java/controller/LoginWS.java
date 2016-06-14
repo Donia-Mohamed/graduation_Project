@@ -38,12 +38,12 @@ public class LoginWS {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
 //    @Consumes(MediaType.APPLICATION_JSON)
-    public Status login(@HeaderParam("email") String email,@HeaderParam("password") String password){
+    public Status login(@HeaderParam("email") String email,@HeaderParam("password") String password,@HeaderParam("macAddress") String macAddress){
         LoginDao loginDB=new LoginDao();
         System.out.println ("email: "+email+"  password  "+password);
         
        
-        Status status=loginDB.checkLogin(email, password);
+        Status status=loginDB.checkLogin(email, password,macAddress);
         
         return status;
     }

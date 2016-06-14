@@ -8,6 +8,7 @@ package DAO;
 import constants.Constants;
 import dto.User;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.servlet.ServletContext;
 import model.AlzheimerDB;
@@ -22,13 +23,14 @@ import model.DesEncrypter;
  */
 public class LoginDao {
     
-     public Status checkLogin(String email, String password){
+     public Status checkLogin(String email, String password,String macAddress){
          User user=new User();
          Status status=new Status();
          AlzheimerDB alzheimerDB=new AlzheimerDB();
          Connection connection=alzheimerDB.getConnection();
          DesEncrypter encrypt=new DesEncrypter();
          String sql = "SELECT * FROM users where email = '"+email+"'";
+          String updateMacAddress = "update users SET mac_Address = ? where email = ?";
         try{
             java.sql.Statement statement=connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -55,11 +57,20 @@ public class LoginDao {
                 user.setPassword(password);
                 user.setLongitude(resultSet.getDouble("longitude"));
                 user.setImageUrl(Constants.IMAGE_PATH+resultSet.getString("image_url"));
-
                 user.setLatitude(resultSet.getDouble("latitude"));
+                
+                PreparedStatement ps = connection.prepareStatement(updateMacAddress);
+
+                ps.setString(1, macAddress);
+                ps.setString(2, email);
+                
+                ps.executeUpdate();
+            
                 status.setStatus(1);
                 status.setMessage("success");
-               status.setUser(user);
+                status.setUser(user);
+               
+               
                 
             }else{
                 System.out.println("fail pass");
