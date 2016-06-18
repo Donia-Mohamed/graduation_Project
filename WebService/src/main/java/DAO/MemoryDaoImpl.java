@@ -29,8 +29,9 @@ public class MemoryDaoImpl implements MemoryDaoInterface {
      * @return int
      */
     public int saveMemoryText(String patientEmail, String relativeEmail, String text, String date) {
+        System.out.println("patient email>> "+patientEmail+"   "+relativeEmail);
         int patientId = 0;
-        int relativeId = 0;
+        int relativeId =0;
         int result = 0;
         int memoriesId = 0;
 
@@ -42,28 +43,44 @@ public class MemoryDaoImpl implements MemoryDaoInterface {
         System.out.println("patientId in save memory" + patientId);
         //to select relative id
         relativeId = getRelativeId(relativeEmail);
+       
         System.out.println("relativeId in save memory" + relativeId);
         try {
             //Query to insert memory into memories table
             String addIntoMemoriestQuery = "insert into alzheimer.memories (patient_id,relative_id) values(?,?)";
+            
             PreparedStatement preparedStatement = connection.prepareStatement(addIntoMemoriestQuery);
             preparedStatement.setInt(1, patientId);
+            if(relativeId!=0){
             preparedStatement.setInt(2, relativeId);
+            }else{
+            preparedStatement.setString(2, null);
+            }
+            System.out.println(preparedStatement);
 
             preparedStatement.executeUpdate();
             System.out.println("result in save memory=" + result);
             //Query to select memories_id from memories table
+            if(relativeId!=0){
             String selectMemoriesId = "select * from alzheimer.memories where patient_id= ? and relative_id= ?";
+            
             preparedStatement = connection.prepareStatement(selectMemoriesId);
             preparedStatement.setInt(1, patientId);
             preparedStatement.setInt(2, relativeId);
-
+                            System.out.println(preparedStatement);
+            
+            }else{
+               String selectMemoriesId = "select * from alzheimer.memories where patient_id= ?";
+            
+            preparedStatement = connection.prepareStatement(selectMemoriesId);
+            preparedStatement.setInt(1, patientId);
+                            System.out.println(preparedStatement);
+            }
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 memoriesId = rs.getInt("memories_id");
-
+             
             }
-            System.out.println("memories id=----->" + memoriesId);
 
             rs.close();
             preparedStatement.close();
@@ -74,7 +91,8 @@ public class MemoryDaoImpl implements MemoryDaoInterface {
             preparedStatement.setString(2, text);
             preparedStatement.setString(3, date);
             preparedStatement.setInt(4, patientId);
-       
+                        System.out.println(preparedStatement);
+
 
             result = preparedStatement.executeUpdate();
 
