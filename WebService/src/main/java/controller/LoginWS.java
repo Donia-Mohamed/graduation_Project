@@ -32,20 +32,32 @@ import javax.ws.rs.core.MediaType;
 @Path("/login")
 public class LoginWS {
 
-  
-
     
+    @Path("/loginM")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
 //    @Consumes(MediaType.APPLICATION_JSON)
-    public Status login(@HeaderParam("email") String email,@HeaderParam("password") String password,@HeaderParam("macAddress") String macAddress){
+    public Status login(@HeaderParam("email") String email,@HeaderParam("password") String password){
         LoginDao loginDB=new LoginDao();
         System.out.println ("email: "+email+"  password  "+password);
         
        
-        Status status=loginDB.checkLogin(email, password,macAddress);
+        Status status=loginDB.checkLogin(email,password);
         
         return status;
+    }
+    @Path("/mac")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Status updateMacAddress(@HeaderParam("email") String email,@HeaderParam("macAddress") String macAddress){
+         LoginDao loginDB=new LoginDao();
+        System.out.println ("email: "+email+"  mac  "+macAddress);
+       
+        Status status=loginDB.updateMac(email,macAddress);
+        
+        return status;
+        
+        
     }
      
 }

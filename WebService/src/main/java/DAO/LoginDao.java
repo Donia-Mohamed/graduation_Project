@@ -10,6 +10,9 @@ import dto.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import model.AlzheimerDB;
 import model.DesEncrypter;
@@ -23,14 +26,13 @@ import model.DesEncrypter;
  */
 public class LoginDao {
     
-     public Status checkLogin(String email, String password,String macAddress){
+     public Status checkLogin(String email, String password){
          User user=new User();
          Status status=new Status();
          AlzheimerDB alzheimerDB=new AlzheimerDB();
          Connection connection=alzheimerDB.getConnection();
          DesEncrypter encrypt=new DesEncrypter();
          String sql = "SELECT * FROM users where email = '"+email+"'";
-          String updateMacAddress = "update users SET mac_Address = ? where email = ?";
         try{
             java.sql.Statement statement=connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -59,12 +61,7 @@ public class LoginDao {
                 user.setImageUrl(Constants.IMAGE_PATH+resultSet.getString("image_url"));
                 user.setLatitude(resultSet.getDouble("latitude"));
                 
-                PreparedStatement ps = connection.prepareStatement(updateMacAddress);
-
-                ps.setString(1, macAddress);
-                ps.setString(2, email);
-                
-                ps.executeUpdate();
+              
             
                 status.setStatus(1);
                 status.setMessage("success");
@@ -89,5 +86,34 @@ public class LoginDao {
         return status;
         
     }
+
+    public Status updateMac(String email,String macAddress) {
+         Status status=new Status();
+         AlzheimerDB alzheimerDB=new AlzheimerDB();
+         Connection connection=alzheimerDB.getConnection();
+          String updateMacAddress = "update users SET mac_Address = ? where email = ?";
+          PreparedStatement ps;
+         try {
+             ps = connection.prepareStatement(updateMacAddress);
+             ps.setString(1, macAddress);
+             ps.setString(2, email);
+             ps.executeUpdate();
+                status.setStatus(1);
+                status.setMessage("success");
+            ps.close();
+            connection.close();
+         } catch (SQLException ex) {
+                status.setStatus(0);
+                status.setMessage("fail");   
+         }
+         
+         return status;
+         
+    }
+
+                
+        
+        
+    
     
 }
