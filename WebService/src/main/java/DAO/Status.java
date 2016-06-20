@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import dto.Relative;
 import dto.User;
 
 /**
@@ -19,6 +20,15 @@ public class Status {
     String message;
     
     User user;
+    Relative relative;
+
+    public Relative getRelative() {
+        return relative;
+    }
+
+    public void setRelative(Relative relative) {
+        this.relative = relative;
+    }
 
     public User getUser() {
         return user;
