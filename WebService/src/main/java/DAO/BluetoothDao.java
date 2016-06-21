@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import constants.Constants;
 import dto.Relative;
 import dto.User;
 import java.sql.Connection;
@@ -39,7 +40,7 @@ public class BluetoothDao {
             relativeData.setUserId(resultSet.getInt("user_id"));
             relativeData.setFirstName(resultSet.getString("first_name"));
             relativeData.setLastName(resultSet.getString("last_name"));
-            relativeData.setImageUrl(resultSet.getString("image_url"));
+            relativeData.setImageUrl(Constants.IMAGE_PATH+resultSet.getString("image_url"));
             status.setStatus(1);
             status.setMessage("succes");
             status.setRelative(relativeData);
