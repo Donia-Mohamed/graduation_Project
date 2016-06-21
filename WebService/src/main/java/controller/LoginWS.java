@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 public class LoginWS {
 
     
-    @Path("/loginM")
+  //  @Path("/login")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -46,6 +46,7 @@ public class LoginWS {
         
         return status;
     }
+    
     @Path("/mac")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
