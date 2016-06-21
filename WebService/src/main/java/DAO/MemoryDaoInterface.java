@@ -19,4 +19,5 @@ public interface MemoryDaoInterface {
      public int deleteMemory(String patientEmail,int memoryId);
      public int updateTextMemory(int memoryId, String date, String text);
      public int getRelativeId(String relativeEmail);
+
 }

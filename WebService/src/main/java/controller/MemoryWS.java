@@ -143,5 +143,20 @@ public class MemoryWS {
         return status;
 
     }
-    
+   
+   /**
+ * This method is used to get Mutual memories of patient 
+ * @param patientEmail
+ * @return ArrayList<Memory> 
+ */
+    @POST
+    @Path("/getMutualMemories")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Memory> getMutualMemories(@HeaderParam("patientEmail") String patientEmail,@HeaderParam("relativeEmail") String relativeEmail) {
+
+        MemoryDaoImpl memoryDaoImpl = new MemoryDaoImpl();
+        ArrayList<Memory> mutualMemories = memoryDaoImpl.getMutualMemories(patientEmail, relativeEmail);
+        System.out.println("size-->" + mutualMemories.size());
+        return mutualMemories;
+    } 
 }
