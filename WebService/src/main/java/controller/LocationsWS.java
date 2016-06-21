@@ -3,6 +3,9 @@ package controller;
 import DAO.LocationDao;
 import DAO.Status;
 import com.google.gson.Gson;
+import static com.sun.jersey.server.impl.model.HttpHelper.produces;
+import dto.fcm.CoordinatesData;
+import dto.fcm.Data;
 import dto.fcm.DataMessageFCM;
 import dto.fcm.RequestLocationData;
 import javax.ws.rs.HeaderParam;
@@ -27,7 +30,7 @@ public class LocationsWS {
     Gson gson;
 
     private final static String API_KEY = "AIzaSyCTxdzNRrrKNJ32OJRmkPFjaUCIY_iZfzM";
-
+    final static int DISCONNET_USER=5050;
     public LocationsWS() {
         gson = new Gson();
     }
@@ -113,5 +116,114 @@ public class LocationsWS {
         }
 
         return status;
+    }
+
+    @POST
+    @Path("/broadcastLocation")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Status broadcastLocation(@HeaderParam("relativeEmail") String relativeEmail, @HeaderParam("longitude") String longitude, @HeaderParam("latitude") String latitude) {
+
+        Status status = new Status();
+        LocationDao locationDao = new LocationDao();
+
+        // Log
+        System.out.println("Longitude & Latitude >>" + longitude + " " + latitude + " Sent to >> " + relativeEmail);
+
+        //Construct data
+        CoordinatesData data = new CoordinatesData();
+        data.setRelativeEmail(relativeEmail);
+        data.setLongitude(longitude);
+        data.setLatitude(latitude);
+        data.setImageUrl(locationDao.getImageUrl(relativeEmail));
+
+        //construct message 
+        DataMessageFCM messageFCM = new DataMessageFCM();
+        messageFCM.setData(data);
+        messageFCM.setTo(locationDao.getToken(relativeEmail));
+
+        // send the data to fcm
+        String url = "https://fcm.googleapis.com/fcm/send";
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httpost = new HttpPost(url);
+        httpost.setHeader("Authorization", "key="+API_KEY);
+        httpost.setHeader("Content-Type", "application/json");
+
+        try {
+            System.out.println("Json >>" + gson.toJson(messageFCM));
+            httpost.setEntity(new StringEntity(gson.toJson(messageFCM)));
+            
+            HttpResponse httpResponse = httpclient.execute(httpost);
+            System.out.println("Request sent -- " + httpResponse.getStatusLine().getStatusCode());
+
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                status.setStatus(1);
+                status.setMessage("Success Request -- 200");
+            } else {
+                status.setStatus(0);
+                status.setMessage("Request failed with error -- " + httpResponse.getStatusLine().getStatusCode());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return status;
+
+    }
+    
+    
+    /**
+     * This method used to disconnect user from receiving GPS updates 
+     * @param relativeEmail
+     * @return 
+     */
+     @Path("/disconnectUser")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Status disconnectUser(@HeaderParam("relativeEmail") String relativeEmail) {
+        
+        Status status = new Status();
+        
+        LocationDao locationDao = new LocationDao();
+        String Token = locationDao.getToken(relativeEmail);
+        Data data = new Data();
+        data.setRequestId(DISCONNET_USER);
+        
+        // message configured
+        DataMessageFCM messageFCM = new DataMessageFCM();
+        messageFCM.setTo(Token);
+        messageFCM.setData(data);
+        
+        
+        
+        // send the data to fcm
+        String url = "https://fcm.googleapis.com/fcm/send";
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httpost = new HttpPost(url);
+        httpost.setHeader("Authorization", "key="+API_KEY);
+        httpost.setHeader("Content-Type", "application/json");
+
+        try {
+            System.out.println("Json >>" + gson.toJson(messageFCM));
+            httpost.setEntity(new StringEntity(gson.toJson(messageFCM)));
+            
+            HttpResponse httpResponse = httpclient.execute(httpost);
+            System.out.println("Request sent -- " + httpResponse.getStatusLine().getStatusCode());
+
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                status.setStatus(1);
+                status.setMessage("Success Request -- 200");
+            } else {
+                status.setStatus(0);
+                status.setMessage("Request failed with error -- " + httpResponse.getStatusLine().getStatusCode());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return status;
+        
+        
     }
 }
