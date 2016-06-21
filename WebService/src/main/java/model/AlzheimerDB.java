@@ -25,7 +25,8 @@ public class AlzheimerDB {
 	String Driver = "com.mysql.jdbc.Driver";
 	String dbname = "alzheimer";
 	String username = "root";
-	String password = "1234";
+        String password = "Ab1234567";
+	//String password = "";
 	
 //    public AlzheimerDB(){
 //            try {
