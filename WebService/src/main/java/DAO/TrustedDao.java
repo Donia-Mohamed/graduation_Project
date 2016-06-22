@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import dto.Relative;
 import dto.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,6 +40,7 @@ public class TrustedDao {
                  preparedStatement.setInt(1, patientId);
                  preparedStatement.setInt(2, relativeId);
                  preparedStatement.executeUpdate();
+                 System.out.println("set Trusted  >>  "+preparedStatement);
                  
             preparedStatement.close();
             connection.close();
@@ -84,6 +86,7 @@ public class TrustedDao {
          AlzheimerDB alzheimerDB=new AlzheimerDB();
          Connection connection=alzheimerDB.getConnection();
           String sql = "SELECT * FROM trusted where patient_id = "+patientId;
+          System.out.println("check patient Id >> "+sql);
         try{
             java.sql.Statement statement=connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -102,30 +105,32 @@ public class TrustedDao {
      }
 
      // meen el trusted bta3 kol patient
-    public Status CheckTrusted(String patientEmail, String relativeEmail) {
-         Status status= new Status();
-         AlzheimerDB alzheimerDB=new AlzheimerDB();
-         int patientId =getEmialId(patientEmail);
-         int relativeId=getEmialId(relativeEmail);
-         Connection connection=alzheimerDB.getConnection();
-          String sql = "SELECT * FROM trusted where patient_id = "+patientId+" and relative_id="+relativeId;
-          System.out.println("check trusted >> "+sql);
-           try{
-            java.sql.Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next()){
-               status.setStatus(1);
-             status.setMessage("success");
-            }else{
-                status.setStatus(0);
-                status.setMessage("fail");
-            }
-            
-        }catch(SQLException ex){ex.printStackTrace();}
-         
-         return status;
-        
-    }
+//    public Status CheckTrusted(String patientEmail, String relativeEmail) {
+//         Status status= new Status();
+//         AlzheimerDB alzheimerDB=new AlzheimerDB();
+//         int patientId =getEmialId(patientEmail);
+//         int relativeId=getEmialId(relativeEmail);
+//         Relative relative=new Relative();
+//         Connection connection=alzheimerDB.getConnection();
+//          String sql = "SELECT * FROM trusted where patient_id = "+patientId;
+//          System.out.println("check trusted >> "+sql);
+//           try{
+//            java.sql.Statement statement=connection.createStatement();
+//            ResultSet resultSet = statement.executeQuery(sql);
+//            if(resultSet.next()){
+//                relative.setEmail(sql);
+//               status.setStatus(1);
+//             status.setMessage("success");
+//            }else{
+//                status.setStatus(0);
+//                status.setMessage("fail");
+//            }
+//            
+//        }catch(SQLException ex){ex.printStackTrace();}
+//         
+//         return status;
+//        
+//    }
 
     public Status removeTrusted(String patientEmail, String relativeEmail) {
         
@@ -163,10 +168,12 @@ public class TrustedDao {
         
     }
 
-    public String getTrusted(String patientEmail) {
+    public Relative getTrusted(String patientEmail) {
         int patientId=getEmialId(patientEmail);
         int relativeId=0;
         String phoneNum="";
+        String email="";
+        Relative relative=new Relative();
          AlzheimerDB alzheimerDB=new AlzheimerDB();
         Connection connection=alzheimerDB.getConnection();
           String sql = "SELECT * FROM trusted where patient_id = "+patientId;
@@ -177,6 +184,9 @@ public class TrustedDao {
             if(resultSet.next()){
                relativeId=resultSet.getInt("relative_id");
                 phoneNum=getPhoneById(relativeId);
+                email=getEmailById(relativeId);
+                relative.setEmail(email);
+                relative.setPhoneNumber(phoneNum);
             }
              resultSet.close();
             statement.close();
@@ -184,7 +194,7 @@ public class TrustedDao {
         }catch(SQLException ex){ex.printStackTrace();}
         
         
-        return phoneNum;
+        return relative;
 
     }
     
@@ -208,6 +218,28 @@ public class TrustedDao {
            }catch(SQLException ex){ex.printStackTrace();}
             
         return phoneNum;
+    }
+    
+     public String getEmailById(int relativeId){
+        String email="";
+         AlzheimerDB alzheimerDB=new AlzheimerDB();
+        Connection connection=alzheimerDB.getConnection();
+          String sql = "SELECT email FROM users where user_id = "+relativeId;
+          System.out.println("getemailbyId>>  "+sql);
+          
+           try{
+            java.sql.Statement statement=connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+               email=resultSet.getString("email");
+               
+            }
+             resultSet.close();
+            statement.close();
+            connection.close();
+           }catch(SQLException ex){ex.printStackTrace();}
+            
+        return email;
     }
     
 }

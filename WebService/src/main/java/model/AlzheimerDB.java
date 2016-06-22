@@ -25,20 +25,10 @@ public class AlzheimerDB {
 	String Driver = "com.mysql.jdbc.Driver";
 	String dbname = "alzheimer";
 	String username = "root";
-        String password = "Ab1234567";
+        String password = "1234";
 	//String password = "";
 	
-//    public AlzheimerDB(){
-//            try {
-//               
-//                DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-//                connection = (Connection) DriverManager.getConnection(url + dbname, username, password);
-//          
-//            } catch (SQLException ex) {
-//                Logger.getLogger(AlzheimerDB.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//    
-//    }
+
         
         /**
          * @author Safaa.

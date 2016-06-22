@@ -33,17 +33,17 @@ public class TrustedWs {
     
     } 
     
-    @POST
-    @Path("/check")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Status checkTrusted(@HeaderParam("patientemail") String patientEmail,@HeaderParam("relativeemail") String relativeEmail) {
-    
-    TrustedDao trustedDao=new TrustedDao();
-    Status status=trustedDao.CheckTrusted(patientEmail,relativeEmail);
-    
-    return status;
-    
-    }
+//    @POST
+//    @Path("/check")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Status getEmailTrusted(@HeaderParam("patientemail") String patientEmail,@HeaderParam("relativeemail") String relativeEmail) {
+//    
+//    TrustedDao trustedDao=new TrustedDao();
+//    Status status=trustedDao.CheckTrusted(patientEmail,relativeEmail);
+//    
+//    return status;
+//    
+//    }
     
     
      @POST
@@ -62,12 +62,12 @@ public class TrustedWs {
      @POST
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTrusted(@HeaderParam("patientemail") String patientEmail) {
+    public Relative getTrusted(@HeaderParam("patientemail") String patientEmail) {
     
     TrustedDao trustedDao=new TrustedDao();
-    String phoneNum=trustedDao.getTrusted(patientEmail);
+    Relative relative=trustedDao.getTrusted(patientEmail);
     
-    return phoneNum;
+    return relative;
     
     }
     
